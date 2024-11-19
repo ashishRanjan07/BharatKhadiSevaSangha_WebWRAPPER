@@ -13,15 +13,21 @@ import {AppColor} from './Color';
 
 const Wrapper = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [canGoBack, setCanGoBack] = useState(false);
   const webViewRef = React.useRef(null);
 
   useEffect(() => {
     const backAction = () => {
-      if (webViewRef.current) {
-        webViewRef.current.goBack(); 
-        return true; 
+      if (canGoBack && webViewRef.current) {
+        webViewRef.current.goBack();
+        return true;
+      } else {
+        Alert.alert('Exit App', 'Are you sure you want to exit?', [
+          {text: 'Cancel', style: 'cancel'},
+          {text: 'Exit', onPress: () => BackHandler.exitApp()},
+        ]);
+        return true; // Intercept the back button press
       }
-      return false;
     };
 
     const backHandler = BackHandler.addEventListener(
@@ -30,8 +36,11 @@ const Wrapper = () => {
     );
 
     return () => backHandler.remove();
-  }, []);
-  
+  }, [canGoBack]);
+
+  const handleNavigationStateChange = (navState) => {
+    setCanGoBack(navState.canGoBack); // Update the canGoBack state dynamically
+  };
 
   return (
     <View style={styles.main}>
@@ -55,6 +64,7 @@ const Wrapper = () => {
         }}
         onLoadStart={() => setIsLoading(true)}
         onLoadEnd={() => setIsLoading(false)}
+        onNavigationStateChange={handleNavigationStateChange} 
         style={isLoading ? {display: 'none'} : {flex: 1}}
       />
     </View>
