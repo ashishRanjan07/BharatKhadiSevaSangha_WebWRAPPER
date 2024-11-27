@@ -13,6 +13,7 @@
     "@react-native-community/netinfo": "^11.4.1",
     "react": "18.2.0",
     "react-native": "0.74.5",
+    "react-native-exit-app": "^2.0.0",
     "react-native-indicators": "^0.17.0",
     "react-native-webview": "^13.10.5"
   },

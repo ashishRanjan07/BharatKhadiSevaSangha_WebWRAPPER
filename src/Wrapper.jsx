@@ -10,6 +10,8 @@ import {
 import React, {useState, useEffect} from 'react';
 import {WebView} from 'react-native-webview';
 import {AppColor} from './Color';
+import ExitApp from 'react-native-exit-app'; 
+
 
 const Wrapper = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,26 +22,33 @@ const Wrapper = () => {
     const backAction = () => {
       if (canGoBack && webViewRef.current) {
         webViewRef.current.goBack();
-        return true;
+        return true; // Prevent default back action (go back in webview)
       } else {
+        // Show exit alert
         Alert.alert('Exit App', 'Are you sure you want to exit?', [
-          {text: 'Cancel', style: 'cancel'},
-          {text: 'Exit', onPress: () => BackHandler.exitApp()},
+          { text: 'Cancel', style: 'cancel' }, // Don't exit
+          { 
+            text: 'Exit', 
+            onPress: () => {
+              ExitApp.exitApp();  // Exit the app immediately using the new library
+            }
+          },
         ]);
         return true; // Intercept the back button press
       }
     };
 
+    // Add the back handler listener
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction
     );
 
-    return () => backHandler.remove();
+    return () => backHandler.remove(); // Cleanup listener on unmount
   }, [canGoBack]);
 
   const handleNavigationStateChange = (navState) => {
-    setCanGoBack(navState.canGoBack); // Update the canGoBack state dynamically
+    setCanGoBack(navState.canGoBack); 
   };
 
   return (
