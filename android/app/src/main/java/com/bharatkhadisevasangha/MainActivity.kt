@@ -1,4 +1,4 @@
-package com.bharatkhadisevasangha
+package com.bharatkhadisevasangh
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
